@@ -1,8 +1,8 @@
 name: Deploy
 on:
   push:
-    tags:
-      - v*
+    branches:
+      - master
 
 jobs:
   deploy:
@@ -15,9 +15,12 @@ jobs:
         with:
           node-version: '12.x'
 
-      - name: Get version
-        id: get_version
-        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+      - name: Get Time
+          id: time
+          uses: nanzm/get-time-action@v1.1
+          with:
+            timeZone: 8
+            format: 'YYYY-MM-DD-HH-mm-ss'
 
       - name: Get yarn cache
         id: yarn-cache
@@ -32,7 +35,7 @@ jobs:
             ${{ runner.os }}-yarn-
       - run: npm install --frozen-lockfile
 
-      - run: PUBLIC_URL=https://cdn.jsdelivr.net/gh/test-auto-deploy/online-page@${{steps.get_version.outputs.VERSION}} npm run build
+      - run: PUBLIC_URL=https://cdn.jsdelivr.net/gh/test-auto-deploy/online-page@${{steps.time.outputs.time}} npm run build
         env:
             CI: false
 
@@ -47,10 +50,10 @@ jobs:
           git config user.email 1121506496@qq.com
           git add .
           #echo "Deploying to production server on branch $GITHUB_REF"
-          git commit -m "Deploy ${{ steps.get_version.outputs.VERSION }}"
+          git commit -m "Deploy ${{ steps.time.outputs.time }}"
           git push origin master
-          git tag ${{ steps.get_version.outputs.VERSION }}
-          git push origin ${{ steps.get_version.outputs.VERSION }}
+          git tag ${{ steps.time.outputs.time }}
+          git push origin ${{ steps.time.outputs.time }}
 
       - name: Send dingtalk message
         uses: ghostoy/dingtalk-action@master
@@ -60,6 +63,6 @@ jobs:
           content: |
             {
               "title": "自动部署成功",
-              "text": "### 自动部署成功 \n * 提交: [${{github.sha}}](https://github.com/test-auto-deploy/source-code/commit/${{github.sha}}) \n * 版本: [${{steps.get_version.outputs.VERSION}}](https://github.com/test-auto-deploy/source-code/releases/tag/${{steps.get_version.outputs.VERSION}}) \n * 地址: [https://test-auto-deploy.github.io/online-page/](https://test-auto-deploy.github.io/online-page/)"
+              "text": "### 自动部署成功 \n * 提交: [${{github.sha}}](https://github.com/test-auto-deploy/source-code/commit/${{github.sha}}) \n * 版本: [${{steps.time.outputs.time}}](https://github.com/test-auto-deploy/source-code/releases/tag/${{steps.time.outputs.time}}) \n * 地址: [https://test-auto-deploy.github.io/online-page/](https://test-auto-deploy.github.io/online-page/)"
             }
 
