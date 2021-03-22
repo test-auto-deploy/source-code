@@ -50,7 +50,7 @@ jobs:
           git config user.email 1121506496@qq.com
           git add .
           #echo "Deploying to production server on branch $GITHUB_REF"
-          git commit -m "Deploy ${{ steps.time.outputs.time }}"
+          git commit -m "Deploy tag ${{ steps.time.outputs.time }}"
           git push origin master
           git tag ${{ steps.time.outputs.time }}
           git push origin ${{ steps.time.outputs.time }}
@@ -63,6 +63,6 @@ jobs:
           content: |
             {
               "title": "自动部署成功",
-              "text": "### 自动部署成功 \n 提交: [${{github.event.head_commit.message}}](https://github.com/test-auto-deploy/source-code/commit/${{github.sha}}) \n * 版本: [${{steps.time.outputs.time}}](https://github.com/test-auto-deploy/source-code/releases/tag/${{steps.time.outputs.time}}) \n * 线上地址: [https://test-auto-deploy.github.io/online-page/](https://test-auto-deploy.github.io/online-page/)"
+              "text": "### 自动部署成功\n\n提交: [${{github.event.head_commit.message}}](https://github.com/test-auto-deploy/source-code/commit/${{github.sha}})\n\n版本: [${{steps.time.outputs.time}}](https://github.com/test-auto-deploy/online-page/releases/tag/${{steps.time.outputs.time}})\n\n线上地址: [https://test-auto-deploy.github.io/online-page/](https://test-auto-deploy.github.io/online-page/)"
             }
 
