@@ -20,7 +20,7 @@ jobs:
         uses: nanzm/get-time-action@v1.1
         with:
           timeZone: 8
-          format: 'YYYY-MM-DD-HH-mm-ss'
+          format: 'YYYYMMDD_HHmmss'
 
       - name: Get yarn cache
         id: yarn-cache
