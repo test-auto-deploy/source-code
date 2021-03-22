@@ -1,0 +1,65 @@
+name: Deploy
+on:
+  push:
+    tags:
+      - v*
+
+jobs:
+  deploy:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v2.1.2
+        with:
+          node-version: '12.x'
+
+      - name: Get version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+
+      - name: Get yarn cache
+        id: yarn-cache
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.yarn-cache.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - run: npm install --frozen-lockfile
+
+      - run: PUBLIC_URL=https://cdn.jsdelivr.net/gh/test-auto-deploy/online-page@${{steps.get_version.outputs.VERSION}} npm run build
+        env:
+            CI: false
+
+      - name: Deploy
+        run: |
+          rm -rf .git
+          git clone --depth 1 ${{ secrets.DEPLOY_REPO }} ./dist
+          ls -ahl
+          cp -rf ./build/* ./dist
+          cd ./dist
+          git config user.name m-g-
+          git config user.email 1121506496@qq.com
+          git add .
+          #echo "Deploying to production server on branch $GITHUB_REF"
+          git commit -m "Deploy ${{ steps.get_version.outputs.VERSION }}"
+          git push origin master
+          git tag ${{ steps.get_version.outputs.VERSION }}
+          git push origin ${{ steps.get_version.outputs.VERSION }}
+
+      - name: Send dingtalk message
+        uses: ghostoy/dingtalk-action@master
+        with:
+          webhook: https://oapi.dingtalk.com/robot/send?access_token=${{ secrets.DINGTALK_WEBHOOK }}
+          msgtype: markdown
+          content: |
+            {
+              "title": "自动部署成功",
+              "text": "### 自动部署成功 \n * 提交: [${{github.sha}}](https://github.com/test-auto-deploy/source-code/commit/${{github.sha}}) \n * 版本: [${{steps.get_version.outputs.VERSION}}](https://github.com/test-auto-deploy/source-code/releases/tag/${{steps.get_version.outputs.VERSION}}) \n * 地址: [https://test-auto-deploy.github.io/online-page/](https://test-auto-deploy.github.io/online-page/)"
+            }
+
