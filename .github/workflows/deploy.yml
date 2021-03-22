@@ -59,7 +59,7 @@ jobs:
         uses: ghostoy/dingtalk-action@master
         with:
           webhook: ${{ secrets.DINGTALK_WEBHOOK }}
-          msgtype: actionCard
+          msgtype: action_card
           content: |
             {
               "title": "自动部署成功",
