@@ -63,6 +63,7 @@ jobs:
           content: |
             {
               "title": "自动部署成功",
+              "btnOrientation": "0",
               "btnJsonList": [
                 {"title": "查看提交", "actionUrl": "https://github.com/test-auto-deploy/source-code/commit/${{github.sha}}"},
                 {"title": "查看版本", "actionUrl": "https://github.com/test-auto-deploy/source-code/releases/tag/${{steps.time.outputs.time}}"},
