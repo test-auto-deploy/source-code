@@ -20,7 +20,7 @@ jobs:
         uses: nanzm/get-time-action@v1.1
         with:
           timeZone: 8
-          format: 'YYYYMMDD_HHmmss'
+          format: 'YYYYMMDD-HHmmss'
 
       - name: Get yarn cache
         id: yarn-cache
@@ -59,10 +59,15 @@ jobs:
         uses: ghostoy/dingtalk-action@master
         with:
           webhook: ${{ secrets.DINGTALK_WEBHOOK }}
-          msgtype: markdown
+          msgtype: actionCard
           content: |
             {
               "title": "自动部署成功",
-              "text": "### 自动部署成功 \n * 提交: [${{github.sha}}](https://github.com/test-auto-deploy/source-code/commit/${{github.sha}}) \n * 版本: [${{steps.time.outputs.time}}](https://github.com/test-auto-deploy/source-code/releases/tag/${{steps.time.outputs.time}}) \n * 地址: [https://test-auto-deploy.github.io/online-page/](https://test-auto-deploy.github.io/online-page/)"
+              "button_list": [
+                {"title": "查看提交", "url": "https://github.com/test-auto-deploy/source-code/commit/${{github.sha}}"},
+                {"title": "查看版本", "url": "https://github.com/test-auto-deploy/source-code/releases/tag/${{steps.time.outputs.time}}"},
+                {"title": "线上地址", "url": "https://test-auto-deploy.github.io/online-page/"},
+              ]
+              "markdown": "### 自动部署成功 \n ${{github.event.head_commit.message}}"
             }
 
