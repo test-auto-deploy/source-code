@@ -55,7 +55,7 @@ jobs:
       - name: Send dingtalk message
         uses: ghostoy/dingtalk-action@master
         with:
-          webhook: https://oapi.dingtalk.com/robot/send?access_token=${{ secrets.DINGTALK_WEBHOOK }}
+          webhook: ${{ secrets.DINGTALK_WEBHOOK }}
           msgtype: markdown
           content: |
             {
