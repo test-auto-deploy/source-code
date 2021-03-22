@@ -65,9 +65,9 @@ jobs:
               "title": "自动部署成功",
               "btnOrientation": "0",
               "btns": [
-                {"title": "查看提交", "actionURL": "https://github.com/test-auto-deploy/source-code/commit/${{github.sha}}"},
-                {"title": "查看版本", "actionURL": "https://github.com/test-auto-deploy/online-page/releases/tag/${{steps.time.outputs.time}}"},
-                {"title": "线上地址", "actionURL": "https://test-auto-deploy.github.io/online-page/"}
+                {"title": "查看提交", "actionURL": "https://github.com/test-auto-deploy/source-code/commit/${{github.sha}}?pc_slide=false"},
+                {"title": "查看版本", "actionURL": "https://github.com/test-auto-deploy/online-page/releases/tag/${{steps.time.outputs.time}}?pc_slide=false"},
+                {"title": "线上地址", "actionURL": "https://test-auto-deploy.github.io/online-page/?pc_slide=false"}
               ],
               "text": "### 自动部署成功 \n ${{github.event.head_commit.message}}"
             }
