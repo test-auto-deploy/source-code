@@ -8,7 +8,7 @@ function App() {
         const src = document.getElementsByTagName('script')[1].src
         if(src) {
             try {
-                const str = src.match(/@(\d|-)*\//)
+                const str = src.match(/@(\d|-)*\//)[0]
 
                 if (str) {
                     setTag(str.substring(1, str.length - 1))
