@@ -68,6 +68,6 @@ jobs:
                 {"title": "查看版本", "url": "https://github.com/test-auto-deploy/source-code/releases/tag/${{steps.time.outputs.time}}"},
                 {"title": "线上地址", "url": "https://test-auto-deploy.github.io/online-page/"}
               ],
-              "markdown": "### 自动部署成功 \n ${{github.event.head_commit.message}}"
+              "text": "### 自动部署成功 \n ${{github.event.head_commit.message}}"
             }
 
